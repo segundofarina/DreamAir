@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#0076CA</color>
+    <color name="colorPrimaryDark">#035FA1</color>
+    <color name="colorAccent">#D55B39</color>
+    <color name="light">#212121</color>
+    <color name="onTime">#178A56</color>
+    <color name="delayed">#A81717</color>
+    <color name="white">#FFFFFF</color>
+</resources>

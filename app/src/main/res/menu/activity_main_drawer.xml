@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_flights"
+            android:icon="@drawable/ic_airplanemode_active_black_24dp"
+            android:title="Mis Vuelos" />
+        <item
+            android:id="@+id/nav_sale"
+            android:icon="@drawable/ic_local_offer_black_24dp"
+            android:title="Ofertas" />
+        <item
+            android:id="@+id/nav_notification"
+            android:icon="@drawable/ic_forum_black_24dp"
+            android:title="Notificaciones" />
+
+
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_settings_black_24dp"
+                android:title="Configuración" />
+
+        </menu>
+    </item>
+
+</menu>
