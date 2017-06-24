@@ -82,7 +82,6 @@ public class CustomCards extends RecyclerView.Adapter<CustomCards.ViewHolder> im
                         //        .setAction("Action", null).show();
                         activity.loadFlightDetailFragment(flights.get(position));
 
-
                     }
                 });
             }
