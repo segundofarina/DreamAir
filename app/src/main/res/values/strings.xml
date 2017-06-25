@@ -47,15 +47,31 @@
     <string name="HAS">ha</string>
 
 
-    <string name="FLIGHT_EN">Flight</string>
-    <string name="GATE_EN">Gate</string>
-    <string name="DURATION_EN">Duration</string>
-    <string name="TAKE_OFF_EN">Take off</string>
-    <string name="LAND_EN">Land</string>
-    <string name="DATE_EN">Date</string>
-    <string name="STATUS_EN">Estus</string>
-    <string name="THE_FLIGHT_EN">The flight</string>
-    <string name="FROM_EN">from</string>
-    <string name="TO_EN">to</string>
-    <string name="HAS_EN">has</string>
+    <string-array name="MONTHS">
+        <item>enero</item>
+        <item>febrero</item>
+        <item>marzo</item>
+        <item>abril</item>
+        <item>mayo</item>
+        <item>junio</item>
+        <item>julio</item>
+        <item>agosto</item>
+        <item>septiembre</item>
+        <item>octubre</item>
+        <item>noviembre</item>
+        <item>diciembre</item>
+    </string-array>
+
+    <string name="JANUARY">enero</string>
+    <string name="FEBRUARY">febrero</string>
+    <string name="MARCH">marzo</string>
+    <string name="APRIL">abril</string>
+    <string name="MAY">mayo</string>
+    <string name="JUNE">junio</string>
+    <string name="JULY">julio</string>
+    <string name="AUGUST">agosto</string>
+    <string name="SEPTEMBER">septiembre</string>
+    <string name="OCTOBER">octubre</string>
+    <string name="NOVEMBER">noviembre</string>
+    <string name="DECEMBER">diciembre</string>
 </resources>

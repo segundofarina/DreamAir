@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<string name="app_name">DreamAir</string>-->
+
+    <!--<string name="navigation_drawer_open">Open navigation drawer</string>-->
+    <!--<string name="navigation_drawer_close">Close navigation drawer</string>-->
+
+    <!--<string name="action_settings">Settings</string>-->
+
+
+    <!--<string name="ON_TIME">On Time</string>-->
+    <!--<string name="FAVORITE_FLIGHTS">Favorite flights</string>-->
+
+    <!--<string name="DElETED_FLIGHT">Removed flight.</string>-->
+    <!--<string name="DELETED_ACTION">Undo</string>-->
+
+    <!--<string name="ADDED_FLIGHT">The flight has been added to "My Flights".</string>-->
+    <!--<string name="REPETEAD_FLIGHT">The flight already belongs to "My Flights"</string>-->
+    <!--<string name="MY_FLIGHTS">"My Flights"</string>-->
+    <!--<string name="OFFERS">"Offers"</string>-->
+    <!--<string name="NOTIFICATIONS">"Notifications"</string>-->
+    <!--<string name="hello_blank_fragment">Hello blank fragment</string>-->
+    <!--<string name="title_activity_maps">Map</string>-->
+
+
+
+    <!--<string name="FLIGHT">Flight</string>-->
+    <!--<string name="GATE">Gate</string>-->
+    <!--<string name="DURATION">Duration</string>-->
+    <!--<string name="TAKE_OFF">Take off</string>-->
+    <!--<string name="LAND">Land</string>-->
+    <!--<string name="DATE">Date</string>-->
+    <!--<string name="STATUS">Estus</string>-->
+    <!--<string name="THE_FLIGHT">The flight</string>-->
+    <!--<string name="FROM">from</string>-->
+    <!--<string name="TO">to</string>-->
+    <!--<string name="HAS">has</string>-->
+
+
+    <!--<string-array name="MONTHS">-->
+    <!--<item>january</item>-->
+    <!--<item>february</item>-->
+    <!--<item>march</item>-->
+    <!--<item>april</item>-->
+    <!--<item>may</item>-->
+    <!--<item>june</item>-->
+    <!--<item>july</item>-->
+    <!--<item>august</item>-->
+    <!--<item>september</item>-->
+    <!--<item>october</item>-->
+    <!--<item>november</item>-->
+    <!--<item>dicember</item>-->
+    <!--</string-array>-->
+
+    <!--<string name="JANUARY">january</string>-->
+    <!--<string name="FEBRUARY">february</string>-->
+    <!--<string name="MARCH">march</string>-->
+    <!--<string name="APRIL">april</string>-->
+    <!--<string name="MAY">may</string>-->
+    <!--<string name="JANE">june</string>-->
+    <!--<string name="JULY">july</string>-->
+    <!--<string name="AUGUST">august</string>-->
+    <!--<string name="SEPTEMBER">september</string>-->
+    <!--<string name="OCTOBER">october</string>-->
+    <!--<string name="NOVEMBER">november</string>-->
+    <!--<string name="DECEMBER">december</string>-->
+
+</resources>

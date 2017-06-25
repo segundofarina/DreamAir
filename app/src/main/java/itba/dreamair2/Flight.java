@@ -1,5 +1,6 @@
 package itba.dreamair2;
 
+import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -133,7 +134,39 @@ public class Flight implements Parcelable {
     }
 
     private int getArilineImages(String airlineID) {
-        return R.drawable.aa;
+        int image;
+        switch(airlineID){
+            case "AA":
+                image=R.drawable.aa;
+                break;
+            case "AF":
+                image=R.drawable.af;
+                break;
+            case "AM":
+                image=R.drawable.am;
+                break;
+            case "AR":
+                image=R.drawable.ar;
+                break;
+            case "AV":
+                image=R.drawable.av;
+                break;
+            case "AZ":
+                image=R.drawable.az;
+                break;
+            case "BA":
+                image=R.drawable.ba;
+                break;
+            case "CM":
+                image=R.drawable.cm;
+                break;
+            case "IB":
+                image=R.drawable.ib;
+                break;
+            default:
+                image=R.drawable.aa;
+        }
+        return image;
     }
 
     private int getDestinationImages(String arrivalCityId){
@@ -277,48 +310,56 @@ public class Flight implements Parcelable {
         }
         Calendar cal= Calendar.getInstance();
         cal.setTime(day);
-        String month;
-        switch (cal.get(Calendar.MONTH)){
-            case Calendar.JANUARY:
-                month= "Enero";
-                break;
-            case Calendar.FEBRUARY:
-                month= "Febrero";
-                break;
-            case Calendar.MARCH:
-                month= "Marzo";
-                break;
-            case Calendar.APRIL:
-                month= "Abril";
-                break;
-            case Calendar.MAY:
-                month= "Mayo";
-                break;
-            case Calendar.JUNE:
-                month= "Junio";
-                break;
-            case Calendar.JULY:
-                month= "Julio";
-                break;
-            case Calendar.AUGUST:
-                month= "Agosto";
-                break;
-            case Calendar.SEPTEMBER:
-                month= "Septiembre";
-                break;
-            case Calendar.OCTOBER:
-                month= "Octubre";
-                break;
-            case Calendar.NOVEMBER:
-                month= "Noviembre";
-                break;
-            case Calendar.DECEMBER:
-                month= "Diciembre";
-                break;
-            default:
-                month=null;
-                break;
-        }
+//
+//
+//
+//
+//        String[] months = Resources.getSystem().getStringArray(R.array.MONTHS);
+//        String month = months[cal.get(Calendar.MONTH)];
+//
+//        String month;
+//        switch (cal.get(Calendar.MONTH)){
+//            case Calendar.JANUARY:
+//                month= Resources.getSystem().getString(R.string.JANUARY);
+//                break;
+//            case Calendar.FEBRUARY:
+//                month= Resources.getSystem().getString(R.string.FEBRUARY);
+//                break;
+//            case Calendar.MARCH:
+//                month= Resources.getSystem().getString(R.string.MARCH);
+//                break;
+//            case Calendar.APRIL:
+//                month= Resources.getSystem().getString(R.string.APRIL);
+//                break;
+//            case Calendar.MAY:
+//                month= Resources.getSystem().getString(R.string.MAY);
+//                break;
+//            case Calendar.JUNE:
+//                month= Resources.getSystem().getString(R.string.JUNE);
+//                break;
+//            case Calendar.JULY:
+//                month= Resources.getSystem().getString(R.string.JULY);
+//                break;
+//            case Calendar.AUGUST:
+//                month= Resources.getSystem().getString(R.string.AUGUST);
+//                break;
+//            case Calendar.SEPTEMBER:
+//                month= Resources.getSystem().getString(R.string.SEPTEMBER);
+//                break;
+//            case Calendar.OCTOBER:
+//                month= Resources.getSystem().getString(R.string.OCTOBER);
+//                break;
+//            case Calendar.NOVEMBER:
+//                month= Resources.getSystem().getString(R.string.NOVEMBER);
+//                break;
+//            case Calendar.DECEMBER:
+//                month= Resources.getSystem().getString(R.string.DECEMBER);
+//                break;
+//            default:
+//                month=null;
+//                break;
+//        }
+        String month = "HOLA";
 
         String s=""+cal.get(Calendar.DAY_OF_MONTH)+" de "+month+", "+(cal.get(Calendar.YEAR));
         return s;
