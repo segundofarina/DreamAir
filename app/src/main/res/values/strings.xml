@@ -21,4 +21,30 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
+
+
+    <string name="FLIGHT">Vuelo</string>
+    <string name="GATE">Puerta</string>
+    <string name="DURATION">Duración</string>
+    <string name="TAKE_OFF">Despegue</string>
+    <string name="LAND">Aterrizaje</string>
+    <string name="DATE">Fecha</string>
+    <string name="STATUS">Estado</string>
+    <string name="THE_FLIGHT">El vuelo</string>
+    <string name="FROM">de</string>
+    <string name="TO">a</string>
+    <string name="HAS">ha</string>
+
+
+    <string name="FLIGHT_EN">Flight</string>
+    <string name="GATE_EN">Gate</string>
+    <string name="DURATION_EN">Duration</string>
+    <string name="TAKE_OFF_EN">Take off</string>
+    <string name="LAND_EN">Land</string>
+    <string name="DATE_EN">Date</string>
+    <string name="STATUS_EN">Estus</string>
+    <string name="THE_FLIGHT_EN">The flight</string>
+    <string name="FROM_EN">from</string>
+    <string name="TO_EN">to</string>
+    <string name="HAS_EN">has</string>
 </resources>

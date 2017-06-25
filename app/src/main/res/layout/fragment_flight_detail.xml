@@ -69,7 +69,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
-                        android:text="Vuelo" />
+                        android:text="@string/FLIGHT" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -89,7 +89,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
-                        android:text="Despegue" />
+                        android:text="@string/TAKE_OFF" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -110,7 +110,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
-                        android:text="Fecha" />
+                        android:text="@string/DATE" />
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
@@ -146,7 +146,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
-                        android:text="Puerta" />
+                        android:text="@string/GATE" />
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
@@ -196,7 +196,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
-                        android:text="Duración" />
+                        android:text="@string/DURATION" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="200dp"
@@ -216,7 +216,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
-                        android:text="Aterrizaje" />
+                        android:text="@string/LAND" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -236,7 +236,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
-                        android:text="Estado" />
+                        android:text="@string/STATUS" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
