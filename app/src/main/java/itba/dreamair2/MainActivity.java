@@ -34,6 +34,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import itba.dreamair2.adapters.CustomCards;
+import itba.dreamair2.adapters.FavoritesAdapter;
+import itba.dreamair2.fragments.FavoritesFragment;
 import itba.dreamair2.fragments.FlightDetailFragment;
 import itba.dreamair2.fragments.MyFlightsFragment;
 import itba.dreamair2.fragments.OffersFragment;
@@ -41,10 +43,12 @@ import itba.dreamair2.httprequests.DealResponse;
 import itba.dreamair2.httprequests.FlightsResponse;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MyFlightsFragment.MyFlightsInteractionListener, OffersFragment.OffersFragmentInteractionListener,FlightDetailFragment.OnFlightDetailListener{
+        implements NavigationView.OnNavigationItemSelectedListener,FlightDetailFragment.OnFlightDetailListener{
 
-    ArrayList<FlightsResponse.FlightsBean> flights;
+    ArrayList<Flight> flights;
     CustomCards adapter;
+    ArrayList<Flight> savedFlights;
+    FavoritesAdapter favAdapter;
 
 
 
@@ -55,7 +59,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-       // getActionBar().setTitle("Mis vuelos");
 
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add);
@@ -76,8 +79,11 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+        savedFlights= new ArrayList<>();
         flights= new ArrayList<>();
         adapter = new CustomCards(this,flights);
+        favAdapter= new FavoritesAdapter(this,savedFlights);
         new HttpGetDeals().execute();
 
 
@@ -125,7 +131,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_flights) {
             fragment= getSupportFragmentManager().findFragmentById(R.id.fragment_my_flights);
             if(fragment== null) {
-                fragment = new MyFlightsFragment();
+                fragment = FavoritesFragment.newInstance(favAdapter,savedFlights);
             }
                 getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).addToBackStack(null).commit();
 
@@ -148,17 +154,15 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    @Override
-    public void onMyFlightsInteractionListenerInteraction(Uri uri) {
 
+
+    public void addFavoriteFlight(Flight flight){
+        savedFlights.add(flight);
     }
 
-    @Override
-    public void offersFragmentInteraction(Uri uri) {
 
-    }
 
-    public void loadFlightDetailFragment(FlightsResponse.FlightsBean flight){
+    public void loadFlightDetailFragment(Flight flight){
         FlightDetailFragment fragment = FlightDetailFragment.newInstance(flight);
         getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).addToBackStack(null).commit();
         //fragment.setFlight(flight);
@@ -234,7 +238,7 @@ public class MainActivity extends AppCompatActivity
                 if (flight.getPrice().getTotal().getTotal() == deal.getPrice()) {
                     System.out.println("ENCONTRADOOO Hasta: "+flight.getOutbound_routes().get(0).getSegments().get(0).getArrival().getAirport().getCity().getName()+"Duracion: " + flight.getOutbound_routes().get(0).getDuration());
                     System.out.println("------end-----");
-                    flights.add(flight);
+                    flights.add(new Flight(flight));
                     adapter.notifyDataSetChanged();
                 }
                 else{

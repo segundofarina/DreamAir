@@ -1,45 +1,30 @@
 package itba.dreamair2.fragments;
 
-import android.content.Context;
-import android.net.Uri;
-import android.os.AsyncTask;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v7.widget.LinearLayoutManager;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import itba.dreamair2.Flight;
-import itba.dreamair2.adapters.CustomCards;
-import itba.dreamair2.adapters.CustomList;
-import itba.dreamair2.httprequests.DealResponse;
-import itba.dreamair2.httprequests.FlightsResponse;
 import itba.dreamair2.R;
+import itba.dreamair2.adapters.FavoritesAdapter;
+import itba.dreamair2.httprequests.FlightsResponse;
 
-
-
-public class OffersFragment extends Fragment {
-
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link FavoritesFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class FavoritesFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
 
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
@@ -47,13 +32,13 @@ public class OffersFragment extends Fragment {
     ArrayList<Flight> flights;
 
 
-
-    public OffersFragment() {
+    public FavoritesFragment() {
         // Required empty public constructor
     }
 
-    public static OffersFragment newInstance(CustomCards param1, ArrayList<Flight> param2) {
-        OffersFragment fragment = new OffersFragment();
+
+    public static FavoritesFragment newInstance(FavoritesAdapter param1, ArrayList<Flight> param2) {
+        FavoritesFragment fragment = new FavoritesFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM1, param1);
         args.putParcelableArrayList(ARG_PARAM2, param2);
@@ -70,23 +55,19 @@ public class OffersFragment extends Fragment {
         }
     }
 
-
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_offers, container, false);
+
+        View view= inflater.inflate(R.layout.fragment_favorites, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
         return view;
     }
-
-
-
-
-
-
 
 
 

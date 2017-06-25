@@ -8,32 +8,46 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import itba.dreamair2.MainActivity;
 import itba.dreamair2.R;
+import itba.dreamair2.httprequests.FlightsResponse;
 
 /**
  * Created by segundofarina on 8/6/17.
  */
-
+@Deprecated
 public class CustomList extends ArrayAdapter<String>{
 
     private final static String ON_TIME="En horario";
 
     private final Activity context;
-    private final String[] from;
-    private final String[] to;
-    private final String[] status;
-    private final String[] number;
-    private final Integer[] imageId;
-    public CustomList(Activity context, String[] from, String[] to, String[] status, String[] number, Integer[] imageId) {
-        super(context, R.layout.list_single, from);
-        this.context = context;
-        this.from=from;
-        this.to=to;
-        this.status=status;
-        this.number=number;
-        this.imageId = imageId;
+//    private final String[] from;
+//    private final String[] to;
+//    private final String[] status;
+//    private final String[] number;
+//    private final Integer[] imageId;
 
+    private ArrayList<FlightsResponse.FlightsBean> flights;
+
+//    public CustomList(Activity context, String[] from, String[] to, String[] status, String[] number, Integer[] imageId) {
+//        super(context, R.layout.list_single, from);
+//        this.context = context;
+//        this.from=from;
+//        this.to=to;
+//        this.status=status;
+//        this.number=number;
+//        this.imageId = imageId;
+//
+//    }
+
+    public CustomList(Activity context, ArrayList<FlightsResponse.FlightsBean> flights){
+        super(context, R.layout.list_single, flights.size());
+        this.flights=flights;
+        this.context=context;
     }
+
     @Override
     public View getView(int position, View view, ViewGroup parent) {
 
@@ -48,18 +62,23 @@ public class CustomList extends ArrayAdapter<String>{
         TextView txtNumber = (TextView) rowView.findViewById(R.id.flight_number);
 
         ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
-        txtFrom.setText(from[position]);
-        txtTo.setText(to[position]);
-        txtStatus.setText(status[position]);
-        if(status[position].equals(ON_TIME)){
-            txtStatus.setTextColor(context.getResources().getColor(R.color.onTime));
-        }else {
-            txtStatus.setTextColor(context.getResources().getColor(R.color.delayed));
-        }
-        txtNumber.setText(number[position]);
 
 
-        imageView.setImageResource(imageId[position]);
+        FlightsResponse.FlightsBean.OutboundRoutesBean.SegmentsBean info=flights.get(position).getOutbound_routes().get(0).getSegments().get(0);
+
+        txtFrom.setText(info.getDeparture().getAirport().getCity().getName().split("-")[0]);
+        txtTo.setText(info.getArrival().getAirport().getCity().getName().split("-")[0]);
+        txtNumber.setText(info.getAirline().getId()+" "+ info.getId());
+        txtStatus.setText(ON_TIME);
+        txtStatus.setTextColor(context.getResources().getColor(R.color.onTime));
+
+
+
+
+
+
+
+
         return rowView;
     }
 }

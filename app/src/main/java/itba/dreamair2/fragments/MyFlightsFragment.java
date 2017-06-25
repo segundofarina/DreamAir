@@ -11,8 +11,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 import itba.dreamair2.adapters.CustomList;
 import itba.dreamair2.R;
+import itba.dreamair2.httprequests.FlightsResponse;
 
 
 /**
@@ -23,6 +26,9 @@ import itba.dreamair2.R;
  * Use the {@link MyFlightsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
+
+@Deprecated
 public class MyFlightsFragment extends Fragment {
 
 
@@ -60,29 +66,18 @@ public class MyFlightsFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ArrayList<FlightsResponse.FlightsBean> flights;
 
-    private MyFlightsInteractionListener mListener;
 
     public MyFlightsFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MyFlightsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MyFlightsFragment newInstance(String param1, String param2) {
+
+    public static MyFlightsFragment newInstance(ArrayList<FlightsResponse.FlightsBean> param1) {
         MyFlightsFragment fragment = new MyFlightsFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM1, param1);
-        args.putSerializable(ARG_PARAM2, param2);
+        args.putParcelableArrayList(ARG_PARAM1, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -91,8 +86,7 @@ public class MyFlightsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            flights = getArguments().getParcelableArrayList(ARG_PARAM1);
         }
 
 
@@ -107,60 +101,26 @@ public class MyFlightsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_my_flights, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onMyFlightsInteractionListenerInteraction(uri);
-        }
-    }
 
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        CustomList adapter = new CustomList(getActivity(), from,to,status,number, imageId);
-        list=(ListView) getView().findViewById(R.id.list);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                //Toast.makeText(MainActivity.this, "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
-
-            }
-        });
+        //CustomList adapter = new CustomList(getActivity(), from,to,status,number, imageId);
+        ///CustomList adapter = new CustomList(this,flights);
+        //list=(ListView) getView().findViewById(R.id.list);
+        //list.setAdapter(adapter);
+//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                                    int position, long id) {
+//                //Toast.makeText(MainActivity.this, "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof MyFlightsInteractionListener) {
-            mListener = (MyFlightsInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface MyFlightsInteractionListener {
-        // TODO: Update argument type and name
-        void onMyFlightsInteractionListenerInteraction(Uri uri);
-    }
 }
