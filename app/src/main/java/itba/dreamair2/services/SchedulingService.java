@@ -2,12 +2,32 @@ package itba.dreamair2.services;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+
+import itba.dreamair2.Flight;
+import itba.dreamair2.MainActivity;
+import itba.dreamair2.MyApplication;
+import itba.dreamair2.R;
+import itba.dreamair2.httprequests.StatusResponse;
 import itba.dreamair2.notifications.Notification;
 import itba.dreamair2.notifications.AlarmReceiver;
-import itba.dreamair2.notifications.NotificationGenerator;
 
 /**
  * Created by martin on 25/6/17.
@@ -15,7 +35,9 @@ import itba.dreamair2.notifications.NotificationGenerator;
 
 public class SchedulingService extends IntentService {
 
+    private final static String FLIGHT_STATUS_BASEURL = "http://hci.it.itba.edu.ar/v1/api/status.groovy?method=getflightstatus";
     private final static int NOTIFICATION_ICON_SMALL = itba.dreamair2.R.drawable.ic_stat_logo;
+    private final static String APP_NAME = "Dream Air";
 
     public SchedulingService() {
         super("NotificationService");
@@ -24,25 +46,84 @@ public class SchedulingService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        for(Notification notification : NotificationGenerator.getNotifications()) {
-            sendNotification(notification);
+        final ArrayList<Flight> flights = loadFlightsFromLocalStorage();
+        System.out.println(flights.size());
+
+        for(final Flight flight : flights) {
+            String stringUrl = FLIGHT_STATUS_BASEURL + "&airline_id=" + flight.getAirlineID() + "&flight_number=" + flight.getNumber().substring(3) ;
+
+            HttpURLConnection urlConnection = null;
+            String resp;
+
+            try {
+                URL url = new URL(stringUrl);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                resp = readStream(in);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                resp = null;
+            } finally {
+                if (urlConnection != null)
+                    urlConnection.disconnect();
+            }
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken<StatusResponse>() {
+            }.getType();
+
+            StatusResponse response= gson.fromJson(resp,listType);
+
+            System.out.println(response);
+            System.out.println(flight.getStatus());
+            if(!flight.getStatus().equals(response.getStatus().getStatus())) {
+                flight.setStatus(response.getStatus().getStatus());
+
+                saveFlightsToLocalStorage(flights);
+
+                sendNotification(new Notification(response.getStatus().getId(),APP_NAME, getMsgString(flight.getNumber(),flight.getStatus())),flight);
+
+            }
+
+
         }
 
         AlarmReceiver.completeWakefulIntent(intent);
     }
 
 
-    private void sendNotification(Notification notification) {
+
+    private String readStream(InputStream inputStream) {
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            int i = inputStream.read();
+            while (i != -1) {
+                outputStream.write(i);
+                i = inputStream.read();
+            }
+            return outputStream.toString();
+        } catch (IOException e) {
+            return "";
+        }
+    }
+
+
+
+
+    private void sendNotification(Notification notification,Flight flight) {
 
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(NOTIFICATION_ICON_SMALL)
                         .setContentTitle(notification.getTitle())
-                        .setContentText(notification.getMsg());
+                        .setContentText(notification.getMsg())
+                        .setAutoCancel(true);
 
         // Creates an explicit intent for an Activity in your app
-        /*Intent resultIntent = new Intent(this, ResultActivity.class);
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        resultIntent.putExtra("menuFragment","notificationItem");
+        resultIntent.putExtra("flight",flight);
 
         // The stack builder object will contain an artificial back stack for the
         // started Activity.
@@ -50,18 +131,58 @@ public class SchedulingService extends IntentService {
         // your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(ResultActivity.class);
+        //stackBuilder.addParentStack(MainActivity.class);
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentIntent(resultPendingIntent);
-*/
+
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
         notificationManager.notify(notification.getId(), builder.build());
-        System.out.println("Puse notificacion");
 
+    }
+
+    private void saveFlightsToLocalStorage(ArrayList<Flight> savedFlights) {
+        Gson gson = new Gson();
+        Type listType = new TypeToken<ArrayList<Flight>>() {
+        }.getType();
+
+        String ans= gson.toJson(savedFlights,listType);
+
+        SharedPreferences sharedPref = MyApplication.getSharedPreferences();
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.FAVORITE_FLIGHTS), ans);
+        editor.commit();
+    }
+
+    private ArrayList<Flight> loadFlightsFromLocalStorage() {
+        Gson gson = new Gson();
+        Type listType = new TypeToken<ArrayList<Flight>>() {
+        }.getType();
+
+        SharedPreferences sharedPref = MyApplication.getSharedPreferences();
+        String str =sharedPref.getString(getString(R.string.FAVORITE_FLIGHTS),null);
+
+        return gson.fromJson(str,listType);
+    }
+
+    private String getMsgString(String flight, String status) {
+        String resp = getString(R.string.notificationToastStart);
+        resp += " " +flight+" ";
+        if(status.equals("S")) {
+            resp += getString(R.string.notificationToastProgrammed);
+        } else if(status.equals("A")) {
+            resp += getString(R.string.notificationToastActive);
+        } else if(status.equals("R")) {
+            resp += getString(R.string.notificationToastDeviated);
+        } else if(status.equals("L")) {
+            resp += getString(R.string.notificationToastLanded);
+        } else if(status.equals("C")) {
+            resp += getString(R.string.notificationToastCancelled);
+        }
+        return resp;
     }
 
 }

@@ -106,6 +106,14 @@ public class MainActivity extends AppCompatActivity
 
         Fragment fragment = FavoritesFragment.newInstance(favAdapter,savedFlights);
         getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).addToBackStack(null).commit();
+        Intent intent = getIntent();
+        String menuFragment = intent.getStringExtra("menuFragment");
+        if (menuFragment != null) {
+            if (menuFragment.equals("notificationItem")) {
+                Flight flight = intent.getParcelableExtra("flight");
+                loadFlightDetailFragment(flight);
+            }
+        }
 
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -118,8 +126,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equals(BroadcastContract.UPDATE_NOTIFICATIONS)) {
-                    System.out.println("Estoy acaa!!");
-                    //agrego metodo para actualizar notificaciones
                     updateNotifications();
                 }
             }
@@ -150,6 +156,9 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         MyApplication.activityResumed();
         registerReceiver(broadcastReceiver, new IntentFilter(BroadcastContract.UPDATE_NOTIFICATIONS));
+
+        //updateNotificationsList
+        updateNotifications();
     }
 
     @Override
@@ -469,7 +478,8 @@ public class MainActivity extends AppCompatActivity
         String ans= gson.toJson(savedFlights,listType);
 
 
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        //SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = MyApplication.getSharedPreferences();
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.FAVORITE_FLIGHTS), ans);
         editor.commit();
@@ -480,7 +490,8 @@ public class MainActivity extends AppCompatActivity
         Type listType = new TypeToken<ArrayList<Flight>>() {
         }.getType();
 
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        //SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = MyApplication.getSharedPreferences();
         String str =sharedPref.getString(getString(R.string.FAVORITE_FLIGHTS),null);
 
         return gson.fromJson(str,listType);
@@ -489,7 +500,7 @@ public class MainActivity extends AppCompatActivity
     private void updateNotifications() {
         for(final Flight flight : savedFlights) {
 
-            String url = FLIGHT_STATUS_BASEURL + "&airline_id=" + flight.getAirlineID() + "&flight_number=" + flight.getNumber() ;
+            String url = FLIGHT_STATUS_BASEURL + "&airline_id=" + flight.getAirlineID() + "&flight_number=" + flight.getNumber().substring(3) ;
 
             ApiConnection apiConnection = new ApiConnection(url) {
                 @Override
@@ -499,12 +510,35 @@ public class MainActivity extends AppCompatActivity
                     }.getType();
 
                     StatusResponse response= gson.fromJson(result,listType);
-                    System.out.println("resultado: "+result);
-                    //if(flight.getStatus().equals()) {
 
-                    //}
+                    if(!flight.getStatus().equals(response.getStatus().getStatus())) {
+                        flight.setStatus(response.getStatus().getStatus());
+                        favAdapter.notifyDataSetChanged();
+
+                        //pongo un toast
+                        Toast.makeText( getApplicationContext(), getToastStatusString(flight.getNumber(), flight.getStatus()) ,Toast.LENGTH_SHORT  ).show();
+
+                    }
                 }
             };
+            apiConnection.execute();
         }
+    }
+
+    private String getToastStatusString(String flight, String status) {
+        String resp = getString(R.string.notificationToastStart);
+        resp += " " +flight+" ";
+        if(status.equals("S")) {
+            resp += getString(R.string.notificationToastProgrammed);
+        } else if(status.equals("A")) {
+            resp += getString(R.string.notificationToastActive);
+        } else if(status.equals("R")) {
+            resp += getString(R.string.notificationToastDeviated);
+        } else if(status.equals("L")) {
+            resp += getString(R.string.notificationToastLanded);
+        } else if(status.equals("C")) {
+            resp += getString(R.string.notificationToastCancelled);
+        }
+        return resp;
     }
 }

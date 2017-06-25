@@ -18,6 +18,17 @@
     <string name="MY_FLIGHTS">"Mis Vuelos"</string>
     <string name="OFFERS">"Ofertas"</string>
     <string name="NOTIFICATIONS">"Notificaciones"</string>
+
+
+    <string name="notificationToastStart">"El vuelo"</string>
+    <string name="notificationToastProgrammed">"esta programado."</string>
+    <string name="notificationToastActive">"esta activo."</string>
+    <string name="notificationToastDeviated">"esta desviado."</string>
+    <string name="notificationToastLanded">"esta aterrizado."</string>
+    <string name="notificationToastCancelled">"esta cancelado."</string>
+
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>

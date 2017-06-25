@@ -46,21 +46,6 @@ public abstract class ApiConnection extends AsyncTask<Void, Void, String> {
         }
     }
 
-    /*
-    @Override
-    protected void onPostExecute(String result) {
-        Gson gson = new Gson();
-            Type listType = new TypeToken<DealResponse>() {
-        }.getType();
-
-        DealResponse response= gson.fromJson(result,listType);
-        System.out.println("resultado: "+result);
-        for(DealResponse.DealsBean deal :response.getDeals()){
-
-        }
-
-    }*/
-
     @Override
     abstract protected void onPostExecute(String s);
 

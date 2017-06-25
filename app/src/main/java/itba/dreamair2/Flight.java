@@ -385,6 +385,10 @@ public class Flight implements Parcelable {
         return status;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getNumber() {
         return number;
     }
@@ -434,28 +438,7 @@ public class Flight implements Parcelable {
 
         Flight flight = (Flight) o;
 
-        if (airlineImg != flight.airlineImg) return false;
-        if (destinationImg != flight.destinationImg) return false;
-        if (!departureCity.equals(flight.departureCity)) return false;
-        if (!departureAirport.equals(flight.departureAirport)) return false;
-        if (!departureCityId.equals(flight.departureCityId)) return false;
-        if (!departureAirportId.equals(flight.departureAirportId)) return false;
-        if (!departureTime.equals(flight.departureTime)) return false;
-        if (!departureDate.equals(flight.departureDate)) return false;
-        if (!arrivalCity.equals(flight.arrivalCity)) return false;
-        if (!arrivalAirport.equals(flight.arrivalAirport)) return false;
-        if (!arrivalCityId.equals(flight.arrivalCityId)) return false;
-        if (!arrivalAirportId.equals(flight.arrivalAirportId)) return false;
-        if (arrivalTime != null ? !arrivalTime.equals(flight.arrivalTime) : flight.arrivalTime != null)
-            return false;
-        if (arrivalDate != null ? !arrivalDate.equals(flight.arrivalDate) : flight.arrivalDate != null)
-            return false;
-        if (!duration.equals(flight.duration)) return false;
-        if (gate != null ? !gate.equals(flight.gate) : flight.gate != null) return false;
-        if (status != null ? !status.equals(flight.status) : flight.status != null) return false;
         if (!number.equals(flight.number)) return false;
-        if (!airline.equals(flight.airline)) return false;
-        if (!airlineID.equals(flight.airlineID)) return false;
         return price.equals(flight.price);
 
     }
