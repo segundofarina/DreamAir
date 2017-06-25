@@ -2,9 +2,13 @@ package itba.dreamair2;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -20,6 +24,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -39,19 +45,20 @@ import itba.dreamair2.adapters.CustomCards;
 import itba.dreamair2.adapters.FavoritesAdapter;
 import itba.dreamair2.fragments.FavoritesFragment;
 import itba.dreamair2.fragments.FlightDetailFragment;
+import itba.dreamair2.fragments.MapFragment;
 import itba.dreamair2.fragments.MyFlightsFragment;
 import itba.dreamair2.fragments.OffersFragment;
 import itba.dreamair2.httprequests.DealResponse;
 import itba.dreamair2.httprequests.FlightsResponse;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks,LocationListener{
 
-    ArrayList<Flight> flights;
-    CustomCards adapter;
-    ArrayList<Flight> savedFlights;
-    FavoritesAdapter favAdapter;
-
+    private ArrayList<Flight> flights;
+    private CustomCards adapter;
+    private ArrayList<Flight> savedFlights;
+    private FavoritesAdapter favAdapter;
+    private GoogleApiClient mGoogleApiClient;
 
 
 
@@ -102,6 +109,11 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = FavoritesFragment.newInstance(favAdapter,savedFlights);
         getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).addToBackStack(null).commit();
 
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this,this)
+                .addConnectionCallbacks(this)
+                .build();
     }
 
     @Override
@@ -174,7 +186,11 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).addToBackStack(null).commit();
 
         } else if (id == R.id.nav_notification) {
-
+            fragment= getSupportFragmentManager().findFragmentById(R.id.fragment_map);
+            if(fragment== null) {
+                fragment = new MapFragment();
+            }
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).addToBackStack(null).commit();
         }  else if (id == R.id.nav_settings) {
 
         }
@@ -217,6 +233,41 @@ public class MainActivity extends AppCompatActivity
                                 favAdapter.notifyItemInserted(adapterPosition);
                             }
                         }).show();
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 

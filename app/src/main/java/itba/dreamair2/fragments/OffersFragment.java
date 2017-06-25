@@ -88,11 +88,4 @@ public class OffersFragment extends Fragment {
     }
 
 
-
-
-
-
-
-
-
 }
