@@ -356,15 +356,23 @@ public class MainActivity extends AppCompatActivity
     public boolean onQueryTextSubmit(String query) {
         String params[]=query.split(" ");
         String url = FLIGHT_STATUS_BASEURL + "&airline_id=" + params[0] + "&flight_number=" + params[1] ;
+
         new ApiConnection(url){
 
             @Override
             protected void onPostExecute(String result) {
+                Log.v("Search",result);
                 Gson gson = new Gson();
                 Type listType = new TypeToken<StatusResponse>() {
                 }.getType();
 
                 StatusResponse response= gson.fromJson(result,listType);
+                Log.v("Search",response.getStatus()+"");
+                if(response.getStatus()==null){
+                    Toast.makeText(getApplicationContext(),"No existe el vuelo",Toast.LENGTH_SHORT).show();
+                }else{
+                    loadFlightDetailFragment(new Flight(response.getStatus()));
+                }
 
             }
         }.execute();

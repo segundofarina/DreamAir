@@ -11,6 +11,7 @@ import java.util.Date;
 
 import itba.dreamair2.httprequests.DealResponse;
 import itba.dreamair2.httprequests.FlightsResponse;
+import itba.dreamair2.httprequests.StatusResponse;
 
 /**
  * Created by segundofarina on 16/6/17.
@@ -77,6 +78,33 @@ public class Flight implements Parcelable {
         this.latitude=deal.getCity().getLatitude();
         this.longitude=deal.getCity().getLongitude();
         this.priceDouble=flight.getPrice().getTotal().getTotal();
+    }
+
+    public Flight(StatusResponse.StatusBean info) {
+        this.departureCity = info.getDeparture().getAirport().getCity().getName();
+        this.departureAirport = info.getDeparture().getAirport().getDescription();
+        this.departureCityId = info.getDeparture().getAirport().getCity().getId();
+        this.departureAirportId = info.getDeparture().getAirport().getId();
+        this.departureTime = getTime(info.getDeparture().getScheduled_time());
+        this.departureDate = getStringDate(info.getDeparture().getScheduled_time());
+        this.arrivalCity = info.getArrival().getAirport().getCity().getName();
+        this.arrivalAirport= info.getArrival().getAirport().getDescription();
+        this.arrivalCityId = info.getArrival().getAirport().getCity().getId();
+        this.arrivalAirportId = info.getArrival().getAirport().getId();
+        this.arrivalTime = getTime(info.getArrival().getScheduled_time());
+        this.arrivalDate = getStringDate(info.getArrival().getScheduled_time());
+        this.duration = "176";
+        this.gate = info.getDeparture().getAirport().getGate();
+        this.status = info.getStatus();
+        this.airline = info.getAirline().getName();
+        this.airlineID = info.getAirline().getId();
+        this.number = airlineID+" "+info.getNumber()+"";
+        this.airlineImg=getArilineImages(airlineID);
+        this.destinationImg=getDestinationImages(arrivalCityId);
+        this.price="US$ ";
+        this.latitude=info.getArrival().getAirport().getLatitude();
+        this.longitude=info.getArrival().getAirport().getCity().getLongitude();
+        this.priceDouble=0;
     }
 
     public double getPriceDouble() {
