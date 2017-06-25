@@ -1,8 +1,11 @@
 package itba.dreamair2;
 
-import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.app.Activity;
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -11,7 +14,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -47,23 +49,24 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import itba.dreamair2.adapters.CustomCards;
 import itba.dreamair2.adapters.FavoritesAdapter;
 import itba.dreamair2.fragments.FavoritesFragment;
 import itba.dreamair2.fragments.FlightDetailFragment;
 import itba.dreamair2.fragments.MapFragment;
-import itba.dreamair2.fragments.MyFlightsFragment;
 import itba.dreamair2.fragments.OffersFragment;
 import itba.dreamair2.httprequests.DealResponse;
 import itba.dreamair2.httprequests.FlightsResponse;
+import itba.dreamair2.httprequests.StatusResponse;
+import itba.dreamair2.notifications.AlarmReceiver;
+import itba.dreamair2.contracts.BroadcastContract;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks,LocationListener {
 
-    final private int LOCATIONPERMISSION=12;
-
+    private final int LOCATIONPERMISSION=12;
+    private final static String FLIGHT_STATUS_BASEURL = "http://hci.it.itba.edu.ar/v1/api/status.groovy?method=getflightstatus";
 
     private ArrayList<Flight> flights;
     private CustomCards adapter;
@@ -71,7 +74,8 @@ public class MainActivity extends AppCompatActivity
     private FavoritesAdapter favAdapter;
     private GoogleApiClient mGoogleApiClient;
 
-
+    private BroadcastReceiver broadcastReceiver;
+    private AlarmReceiver alarm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +113,19 @@ public class MainActivity extends AppCompatActivity
                 .addConnectionCallbacks(this)
                 .addApi(LocationServices.API)
                 .build();
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(BroadcastContract.UPDATE_NOTIFICATIONS)) {
+                    System.out.println("Estoy acaa!!");
+                    //agrego metodo para actualizar notificaciones
+                    updateNotifications();
+                }
+            }
+        };
+        alarm = new AlarmReceiver();
+
     }
 
     @Override
@@ -129,10 +146,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.activityResumed();
+        registerReceiver(broadcastReceiver, new IntentFilter(BroadcastContract.UPDATE_NOTIFICATIONS));
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
 
         saveFlightsToLocalStorage(savedFlights);
+        MyApplication.activityPaused();
+        unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -458,5 +484,27 @@ public class MainActivity extends AppCompatActivity
         String str =sharedPref.getString(getString(R.string.FAVORITE_FLIGHTS),null);
 
         return gson.fromJson(str,listType);
+    }
+
+    private void updateNotifications() {
+        for(final Flight flight : savedFlights) {
+
+            String url = FLIGHT_STATUS_BASEURL + "&airline_id=" + flight.getAirlineID() + "&flight_number=" + flight.getNumber() ;
+
+            ApiConnection apiConnection = new ApiConnection(url) {
+                @Override
+                protected void onPostExecute(String result) {
+                    Gson gson = new Gson();
+                        Type listType = new TypeToken<StatusResponse>() {
+                    }.getType();
+
+                    StatusResponse response= gson.fromJson(result,listType);
+                    System.out.println("resultado: "+result);
+                    //if(flight.getStatus().equals()) {
+
+                    //}
+                }
+            };
+        }
     }
 }

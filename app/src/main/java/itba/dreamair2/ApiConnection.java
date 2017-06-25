@@ -19,14 +19,20 @@ import itba.dreamair2.httprequests.DealResponse;
  * Created by martin on 25/6/17.
  */
 
-public class ApiConnection extends AsyncTask<Void, Void, String> {
+public abstract class ApiConnection extends AsyncTask<Void, Void, String> {
+
+    private String stringUrl;
+
+    public ApiConnection(String url) {
+        this.stringUrl = url;
+    }
 
     @Override
     protected String doInBackground(Void... params) {
         HttpURLConnection urlConnection = null;
 
         try {
-            URL url = new URL("http://hci.it.itba.edu.ar/v1/api/booking.groovy?method=getflightdeals&from=BUE");
+            URL url = new URL(stringUrl);
             urlConnection = (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             return readStream(in);
@@ -40,10 +46,11 @@ public class ApiConnection extends AsyncTask<Void, Void, String> {
         }
     }
 
+    /*
     @Override
     protected void onPostExecute(String result) {
         Gson gson = new Gson();
-        Type listType = new TypeToken<DealResponse>() {
+            Type listType = new TypeToken<DealResponse>() {
         }.getType();
 
         DealResponse response= gson.fromJson(result,listType);
@@ -52,7 +59,10 @@ public class ApiConnection extends AsyncTask<Void, Void, String> {
 
         }
 
-    }
+    }*/
+
+    @Override
+    abstract protected void onPostExecute(String s);
 
     private String readStream(InputStream inputStream) {
         try {
