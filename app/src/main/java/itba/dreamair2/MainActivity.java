@@ -69,16 +69,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -88,14 +78,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Gson gson = new Gson();
-        Type listType = new TypeToken<ArrayList<Flight>>() {
-        }.getType();
-
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        String str =sharedPref.getString(getString(R.string.FAVORITE_FLIGHTS),null);
-
-        savedFlights=gson.fromJson(str,listType);
+        savedFlights = loadFlightsFromLocalStorage();
         if(savedFlights==null){
             savedFlights= new ArrayList<>();
         }
@@ -136,17 +119,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        Gson gson = new Gson();
-        Type listType = new TypeToken<ArrayList<Flight>>() {
-        }.getType();
 
-        String ans= gson.toJson(savedFlights,listType);
-
-
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.FAVORITE_FLIGHTS), ans);
-        editor.commit();
+        saveFlightsToLocalStorage(savedFlights);
     }
 
     @Override
@@ -417,5 +391,30 @@ public class MainActivity extends AppCompatActivity
                 return "";
             }
         }
+    }
+
+    private void saveFlightsToLocalStorage(ArrayList<Flight> savedFlights) {
+        Gson gson = new Gson();
+        Type listType = new TypeToken<ArrayList<Flight>>() {
+        }.getType();
+
+        String ans= gson.toJson(savedFlights,listType);
+
+
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.FAVORITE_FLIGHTS), ans);
+        editor.commit();
+    }
+
+    private ArrayList<Flight> loadFlightsFromLocalStorage() {
+        Gson gson = new Gson();
+        Type listType = new TypeToken<ArrayList<Flight>>() {
+        }.getType();
+
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        String str =sharedPref.getString(getString(R.string.FAVORITE_FLIGHTS),null);
+
+        return gson.fromJson(str,listType);
     }
 }
