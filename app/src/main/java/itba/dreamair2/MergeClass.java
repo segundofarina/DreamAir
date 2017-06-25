@@ -13,13 +13,14 @@ public class MergeClass {
         this.name=name;
         this.difficulty=difficulty;
     }
-}
+
     //otro comentario
 
     public boolean isOne(int i) {
         if(i == 1) {
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
  }
