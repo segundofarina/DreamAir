@@ -19,8 +19,12 @@ public class MergeClass {
     public boolean isOne(int i) {
         if(i == 1) {
             return true;
-        } else {
-            return false;
+        }else{
+            if(i== (4-5)*-1){
+                return true;
+            }
         }
+        return false;
     }
+
  }
