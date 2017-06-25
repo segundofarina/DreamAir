@@ -40,7 +40,7 @@ public class FavoritesFragment extends Fragment {
     public static FavoritesFragment newInstance(FavoritesAdapter param1, ArrayList<Flight> param2) {
         FavoritesFragment fragment = new FavoritesFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM1, param1);
+        args.putParcelable(ARG_PARAM1, param1);
         args.putParcelableArrayList(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -50,8 +50,8 @@ public class FavoritesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            adapter = (RecyclerView.Adapter) getArguments().getSerializable(ARG_PARAM1);
-            flights = (ArrayList<Flight>) getArguments().getSerializable(ARG_PARAM2);
+            adapter = (RecyclerView.Adapter) getArguments().getParcelable(ARG_PARAM1);
+            flights = getArguments().getParcelableArrayList(ARG_PARAM2);
         }
     }
 

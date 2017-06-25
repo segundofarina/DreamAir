@@ -1,6 +1,8 @@
 package itba.dreamair2.adapters;
 
 import android.app.Activity;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,15 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import itba.dreamair2.Flight;
-import itba.dreamair2.httprequests.FlightsResponse;
 import itba.dreamair2.MainActivity;
 import itba.dreamair2.R;
 
@@ -25,21 +21,40 @@ import itba.dreamair2.R;
  * Created by segundofarina on 13/6/17.
  */
 
-
-
-
-
-
-
-public class CustomCards extends RecyclerView.Adapter<CustomCards.ViewHolder> implements Serializable {
-
+public class CustomCards extends RecyclerView.Adapter<CustomCards.ViewHolder> implements Parcelable {
 
     List<Flight> flights;
     MainActivity activity;
 
     public CustomCards(Activity activity,List<Flight> flights) {
-    this.activity=(MainActivity) activity;
-    this.flights=flights;
+        this.activity=(MainActivity) activity;
+        this.flights=flights;
+    }
+
+    protected CustomCards(Parcel in) {
+        flights = in.createTypedArrayList(Flight.CREATOR);
+    }
+
+    public static final Creator<CustomCards> CREATOR = new Creator<CustomCards>() {
+        @Override
+        public CustomCards createFromParcel(Parcel in) {
+            return new CustomCards(in);
+        }
+
+        @Override
+        public CustomCards[] newArray(int size) {
+            return new CustomCards[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(flights);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
@@ -62,10 +77,6 @@ public class CustomCards extends RecyclerView.Adapter<CustomCards.ViewHolder> im
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
                         int position = getAdapterPosition();
-
-                        //Snackbar.make(v, "Click detected on item " + position,
-                        //        Snackbar.LENGTH_LONG)
-                        //        .setAction("Action", null).show();
                         activity.loadFlightDetailFragment(flights.get(position));
 
                     }
@@ -99,6 +110,3 @@ public class CustomCards extends RecyclerView.Adapter<CustomCards.ViewHolder> im
             return flights.size();
         }
     }
-
-
-

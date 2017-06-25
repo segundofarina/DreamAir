@@ -55,7 +55,7 @@ public class OffersFragment extends Fragment {
     public static OffersFragment newInstance(CustomCards param1, ArrayList<Flight> param2) {
         OffersFragment fragment = new OffersFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM1, param1);
+        args.putParcelable(ARG_PARAM1, param1);
         args.putParcelableArrayList(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -65,8 +65,8 @@ public class OffersFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            adapter = (RecyclerView.Adapter) getArguments().getSerializable(ARG_PARAM1);
-            flights = (ArrayList<Flight>) getArguments().getSerializable(ARG_PARAM2);
+            adapter = (RecyclerView.Adapter) getArguments().getParcelable(ARG_PARAM1);
+            flights = getArguments().getParcelableArrayList(ARG_PARAM2);
         }
     }
 

@@ -1,6 +1,8 @@
 package itba.dreamair2.adapters;
 
 import android.app.Activity;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +16,12 @@ import java.util.List;
 import itba.dreamair2.Flight;
 import itba.dreamair2.MainActivity;
 import itba.dreamair2.R;
-import itba.dreamair2.httprequests.FlightsResponse;
 
 /**
  * Created by segundofarina on 24/6/17.
  */
 
-public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> implements Serializable {
+public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> implements Parcelable {
 
     List<Flight> flights;
     MainActivity activity;
@@ -30,6 +31,31 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         this.flights = flights;
     }
 
+    protected FavoritesAdapter(Parcel in) {
+        flights = in.createTypedArrayList(Flight.CREATOR);
+    }
+
+    public static final Creator<FavoritesAdapter> CREATOR = new Creator<FavoritesAdapter>() {
+        @Override
+        public FavoritesAdapter createFromParcel(Parcel in) {
+            return new FavoritesAdapter(in);
+        }
+
+        @Override
+        public FavoritesAdapter[] newArray(int size) {
+            return new FavoritesAdapter[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(flights);
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -81,9 +107,4 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
     public int getItemCount() {
         return flights.size();
     }
-
-
-
 }
-
-

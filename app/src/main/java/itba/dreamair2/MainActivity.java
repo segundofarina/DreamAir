@@ -1,5 +1,7 @@
 package itba.dreamair2;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -79,8 +81,17 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Gson gson = new Gson();
+        Type listType = new TypeToken<ArrayList<Flight>>() {
+        }.getType();
 
-        savedFlights= new ArrayList<>();
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        String str =sharedPref.getString(getString(R.string.FAVORITE_FLIGHTS),null);
+
+        savedFlights=gson.fromJson(str,listType);
+        if(savedFlights==null){
+            savedFlights= new ArrayList<>();
+        }
         flights= new ArrayList<>();
         adapter = new CustomCards(this,flights);
         favAdapter= new FavoritesAdapter(this,savedFlights);
@@ -104,6 +115,22 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Gson gson = new Gson();
+        Type listType = new TypeToken<ArrayList<Flight>>() {
+        }.getType();
+
+        String ans= gson.toJson(savedFlights,listType);
+
+
+//        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPref.edit();
+//        editor.putString(getString(R.string.FAVORITE_FLIGHTS), ans);
+//        editor.commit();
     }
 
     @Override

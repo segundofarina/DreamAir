@@ -15,33 +15,33 @@ import itba.dreamair2.httprequests.FlightsResponse;
  * Created by segundofarina on 16/6/17.
  */
 
-public class Flight implements Parcelable,Serializable {
+public class Flight implements Parcelable {
 
-    String departureCity;
-    String departureAirport;
-    String departureCityId;
-    String departureAirportId;
-    String departureTime;
-    String departureDate;
+    private String departureCity;
+    private String departureAirport;
+    private String departureCityId;
+    private String departureAirportId;
+    private String departureTime;
+    private String departureDate;
 
-    String arrivalCity;
-    String arrivalAirport;
-    String arrivalCityId;
-    String arrivalAirportId;
-    String arrivalTime;
-    String arrivalDate;
+    private String arrivalCity;
+    private String arrivalAirport;
+    private String arrivalCityId;
+    private String arrivalAirportId;
+    private String arrivalTime;
+    private String arrivalDate;
 
-    String duration;
-    String gate;
-    String status;
-    String number;
-    String airline;
-    String airlineID;
+    private String duration;
+    private String gate;
+    private String status;
+    private String number;
+    private String airline;
+    private String airlineID;
 
-    String price;
+    private String price;
 
-    int airlineImg;
-    int destinationImg;
+    private int airlineImg;
+    private int destinationImg;
 
 
     public Flight(FlightsResponse.FlightsBean flight) {
