@@ -42,6 +42,9 @@ public class Flight implements Parcelable {
     private int airlineImg;
     private int destinationImg;
 
+    private double latitude;
+    private double longitude;
+
 
     public Flight(FlightsResponse.FlightsBean flight) {
         FlightsResponse.FlightsBean.OutboundRoutesBean.SegmentsBean info= flight.getOutbound_routes().get(0).getSegments().get(0);
@@ -68,6 +71,16 @@ public class Flight implements Parcelable {
         this.airlineImg=getArilineImages(airlineID);
         this.destinationImg=getDestinationImages(arrivalCityId);
         this.price="US$ "+flight.getPrice().getTotal().getTotal()+"";
+        this.latitude=123;
+        this.longitude=123;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
     }
 
     protected Flight(Parcel in) {

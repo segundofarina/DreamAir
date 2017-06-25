@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/notification_single"
+    android:layout_margin="5dp"
+    card_view:cardBackgroundColor="@color/white"
+    card_view:cardCornerRadius="2dp"
+    card_view:cardElevation="3dp"
+
+    android:foreground="?selectableItemBackground"
+    android:clickable="true" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="90dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/aa"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/img1"
+                    android:text="El vuelo "
+                    android:textSize="18sp"
+                    android:textColor="@color/light"
+                    android:layout_marginTop="15dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/favorite_flight_number"
+                    android:text="AA1800"
+                    android:textSize="18sp"
+                    android:textColor="@color/light"
+                    android:layout_alignBaseline="@+id/img1"
+                    android:layout_alignBottom="@+id/img1"
+                    android:textStyle="bold"
+                    android:layout_toEndOf="@+id/img1" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/img2"
+                    android:text=" de "
+                    android:textSize="18sp"
+                    android:textColor="@color/light"
+                    android:layout_marginTop="15dp"
+                    android:layout_toEndOf="@id/favorite_flight_number" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="110dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/favorite_from_city"
+                    android:text="Buenos Aires"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="@color/light"
+                    android:layout_marginTop="15dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/img3"
+                    android:text=" a "
+                    android:layout_toEndOf="@id/favorite_from_city"
+                    android:textSize="18sp"
+                    android:textColor="@color/light"
+                    android:layout_marginTop="15dp"
+                    />
+
+                <TextView
+                    android:layout_width="110dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/favorite_to_city"
+                    android:text="Nueva York"
+                    android:textStyle="bold"
+                    android:layout_toEndOf="@id/img3"
+                    android:textSize="18sp"
+                    android:textColor="@color/light"
+                    android:layout_marginTop="15dp"
+                    />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/img4"
+                    android:text=" ha "
+                    android:textSize="18sp"
+                    android:textColor="@color/light"
+                    android:layout_marginTop="15dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/favorite_fight_status"
+                    android:text=" Aterrizado "
+                    android:textSize="18sp"
+                    android:layout_toEndOf="@id/img4"
+                    android:textStyle="bold"
+                    android:textColor="@color/onTime"
+                    android:layout_marginTop="15dp"
+                    />
+            </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/favorite_flight_date"
+                android:text="10 de mayo a las 14:30"
+                android:textSize="18sp"
+                android:layout_marginTop="15dp"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

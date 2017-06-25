@@ -15,20 +15,28 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
+import itba.dreamair2.Flight;
 import itba.dreamair2.R;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
+    private static final String ARG_PARAM1 = "param1";
+
     private GoogleMap mMap;
+    private ArrayList<Flight> flights;
+
 
     public MapFragment() {
         // Required empty public constructor
     }
 
-    public static MapFragment newInstance(String param1, String param2) {
+    public static MapFragment newInstance(ArrayList<Flight> flights) {
         MapFragment fragment = new MapFragment();
         Bundle args = new Bundle();
+        args.putParcelableArrayList(ARG_PARAM1, flights);
         fragment.setArguments(args);
         return fragment;
     }
@@ -36,7 +44,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (getArguments() != null) {
+            flights = getArguments().getParcelableArrayList(ARG_PARAM1);
+        }
 
     }
 
@@ -69,6 +79,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    public void updateMarkers(){
+        for(Flight flight: flights){
+            MarkerOptions marker = new MarkerOptions().position(new LatLng(flight.getLatitude(),flight.getLongitude()));
+        }
     }
 
 }
