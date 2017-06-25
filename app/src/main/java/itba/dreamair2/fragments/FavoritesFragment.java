@@ -58,6 +58,8 @@ public class FavoritesFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view= inflater.inflate(R.layout.fragment_favorites, container, false);
+        MainActivity activity= (MainActivity)getActivity();
+        activity.getSupportActionBar().setTitle(getString(R.string.MY_FLIGHTS));
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getContext());

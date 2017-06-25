@@ -16,6 +16,9 @@
 
     <string name="ADDED_FLIGHT">El vuelo se agregó a "Mis Vuelos".</string>
     <string name="REPETEAD_FLIGHT">Ya pertenece a "Mis Vuelos"</string>
+    <string name="MY_FLIGHTS">"Mis Vuelos"</string>
+    <string name="OFFERS">"Ofertas"</string>
+    <string name="NOTIFICATIONS">"Notificaciones"</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>

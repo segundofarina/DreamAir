@@ -27,6 +27,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import itba.dreamair2.Flight;
+import itba.dreamair2.MainActivity;
 import itba.dreamair2.adapters.CustomCards;
 import itba.dreamair2.adapters.CustomList;
 import itba.dreamair2.httprequests.DealResponse;
@@ -74,6 +75,10 @@ public class OffersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_offers, container, false);
+
+        MainActivity activity= (MainActivity)getActivity();
+        activity.getSupportActionBar().setTitle(getString(R.string.OFFERS));
+
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getContext());

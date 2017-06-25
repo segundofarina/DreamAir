@@ -92,6 +92,8 @@ public class MainActivity extends AppCompatActivity
         if(savedFlights==null){
             savedFlights= new ArrayList<>();
         }
+
+
         flights= new ArrayList<>();
         adapter = new CustomCards(this,flights);
         favAdapter= new FavoritesAdapter(this,savedFlights);
