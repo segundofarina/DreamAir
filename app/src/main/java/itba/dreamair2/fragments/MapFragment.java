@@ -79,11 +79,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        updateMarkers();
     }
 
     public void updateMarkers(){
         for(Flight flight: flights){
             MarkerOptions marker = new MarkerOptions().position(new LatLng(flight.getLatitude(),flight.getLongitude()));
+            marker.title(flight.getDepartureAirportId()+ " - "+flight.getArrivalAirportId());
+            marker.snippet(flight.getPrice());
+            mMap.addMarker(marker);
         }
     }
 

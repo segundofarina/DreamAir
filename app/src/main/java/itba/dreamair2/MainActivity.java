@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_notification) {
             fragment= getSupportFragmentManager().findFragmentById(R.id.fragment_map);
             if(fragment== null) {
-                fragment = new MapFragment();
+                fragment = MapFragment.newInstance(flights);
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).addToBackStack(null).commit();
         }  else if (id == R.id.nav_settings) {
@@ -375,7 +375,7 @@ public class MainActivity extends AppCompatActivity
                 if (flight.getPrice().getTotal().getTotal() == deal.getPrice()) {
                     System.out.println("ENCONTRADOOO Hasta: "+flight.getOutbound_routes().get(0).getSegments().get(0).getArrival().getAirport().getCity().getName()+"Duracion: " + flight.getOutbound_routes().get(0).getDuration());
                     System.out.println("------end-----");
-                    flights.add(new Flight(flight));
+                    flights.add(new Flight(flight,deal));
                     adapter.notifyItemInserted(flights.size()-1);
                 }
                 else{

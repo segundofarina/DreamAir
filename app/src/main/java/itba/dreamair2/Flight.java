@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import itba.dreamair2.httprequests.DealResponse;
 import itba.dreamair2.httprequests.FlightsResponse;
 
 /**
@@ -46,7 +47,7 @@ public class Flight implements Parcelable {
     private double longitude;
 
 
-    public Flight(FlightsResponse.FlightsBean flight) {
+    public Flight(FlightsResponse.FlightsBean flight, DealResponse.DealsBean deal) {
         FlightsResponse.FlightsBean.OutboundRoutesBean.SegmentsBean info= flight.getOutbound_routes().get(0).getSegments().get(0);
 
 
@@ -71,8 +72,8 @@ public class Flight implements Parcelable {
         this.airlineImg=getArilineImages(airlineID);
         this.destinationImg=getDestinationImages(arrivalCityId);
         this.price="US$ "+flight.getPrice().getTotal().getTotal()+"";
-        this.latitude=123;
-        this.longitude=123;
+        this.latitude=deal.getCity().getLatitude();
+        this.longitude=deal.getCity().getLongitude();
     }
 
     public double getLatitude() {
