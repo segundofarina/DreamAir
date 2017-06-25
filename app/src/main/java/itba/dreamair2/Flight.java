@@ -18,6 +18,7 @@ import itba.dreamair2.httprequests.FlightsResponse;
 
 public class Flight implements Parcelable {
 
+    private double priceDouble;
     private String departureCity;
     private String departureAirport;
     private String departureCityId;
@@ -75,6 +76,11 @@ public class Flight implements Parcelable {
         this.price="US$ "+flight.getPrice().getTotal().getTotal()+"";
         this.latitude=deal.getCity().getLatitude();
         this.longitude=deal.getCity().getLongitude();
+        this.priceDouble=flight.getPrice().getTotal().getTotal();
+    }
+
+    public double getPriceDouble() {
+        return priceDouble;
     }
 
     public double getLatitude() {

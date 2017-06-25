@@ -18,7 +18,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -63,7 +65,7 @@ import itba.dreamair2.notifications.AlarmReceiver;
 import itba.dreamair2.contracts.BroadcastContract;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks,LocationListener {
+        implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks,LocationListener,SearchView.OnQueryTextListener {
 
     private final int LOCATIONPERMISSION=12;
     private final static String FLIGHT_STATUS_BASEURL = "http://hci.it.itba.edu.ar/v1/api/status.groovy?method=getflightstatus";
@@ -105,6 +107,7 @@ public class MainActivity extends AppCompatActivity
         new HttpGetDeals().execute();
 
         Fragment fragment = FavoritesFragment.newInstance(favAdapter,savedFlights);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).commit();
         getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).addToBackStack(null).commit();
         Intent intent = getIntent();
         String menuFragment = intent.getStringExtra("menuFragment");
@@ -148,6 +151,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
+        searchView.setOnQueryTextListener(this);
         return true;
     }
 
@@ -178,9 +184,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -197,21 +201,21 @@ public class MainActivity extends AppCompatActivity
             if(fragment== null) {
                 fragment = FavoritesFragment.newInstance(favAdapter,savedFlights);
             }
-                getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).commit();
 
         } else if (id == R.id.nav_sale) {
             fragment= getSupportFragmentManager().findFragmentById(R.id.fragment_offers);
             if(fragment== null) {
                 fragment = OffersFragment.newInstance(adapter,flights);
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).addToBackStack(null).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).commit();
 
         } else if (id == R.id.nav_notification) {
             fragment= getSupportFragmentManager().findFragmentById(R.id.fragment_map);
             if(fragment== null) {
                 fragment = MapFragment.newInstance(flights);
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).addToBackStack(null).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).commit();
         }  else if (id == R.id.nav_settings) {
 
         }
@@ -320,6 +324,30 @@ public class MainActivity extends AppCompatActivity
         }catch (SecurityException e){
             Log.v("MAP","Permission failed");
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        String params[]=query.split(" ");
+        String url = FLIGHT_STATUS_BASEURL + "&airline_id=" + params[0] + "&flight_number=" + params[1] ;
+        new ApiConnection(url){
+
+            @Override
+            protected void onPostExecute(String result) {
+                Gson gson = new Gson();
+                Type listType = new TypeToken<StatusResponse>() {
+                }.getType();
+
+                StatusResponse response= gson.fromJson(result,listType);
+
+            }
+        }.execute();
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 
 
