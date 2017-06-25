@@ -28,6 +28,13 @@
     <string name="notificationToastCancelled">"esta cancelado."</string>
 
 
+    <string name="flightStatusProgrammed">Programado</string>
+    <string name="flightStatusActive">Activo</string>
+    <string name="flightStatusDeviated">Desviado</string>
+    <string name="flightStatusLanded">Aterrizado</string>
+    <string name="flightStatusCancelled">Cancelado</string>
+
+    <string name="gateNotFound">No disponible</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

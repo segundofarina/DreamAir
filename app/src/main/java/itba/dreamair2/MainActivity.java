@@ -241,10 +241,36 @@ public class MainActivity extends AppCompatActivity
 
 
 
-    public void loadFlightDetailFragment(Flight flight){
-        FlightDetailFragment fragment = FlightDetailFragment.newInstance(flight);
+    public void loadFlightDetailFragment(final Flight flight){
+        final FlightDetailFragment fragment = FlightDetailFragment.newInstance(flight);
         getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).addToBackStack(null).commit();
-        //fragment.setFlight(flight);
+
+        //Busco el estado del vuelo
+        String url = FLIGHT_STATUS_BASEURL + "&airline_id=" + flight.getAirlineID() + "&flight_number=" + flight.getNumber().substring(3) ;
+
+        ApiConnection apiConnection = new ApiConnection(url) {
+            @Override
+            protected void onPostExecute(String result) {
+                Gson gson = new Gson();
+                Type listType = new TypeToken<StatusResponse>() {
+                }.getType();
+
+                StatusResponse response= gson.fromJson(result,listType);
+
+                flight.setStatus(getFlightStatusString(response.getStatus().getStatus()));
+                if(response.getStatus().getDeparture().getAirport().getGate() != null) {
+                    flight.setGate(response.getStatus().getDeparture().getAirport().getTerminal() + response.getStatus().getDeparture().getAirport().getGate());
+                } else {
+                    flight.setGate(getString(R.string.gateNotFound));
+                }
+
+
+                fragment.updateFlightGate(flight.getGate());
+                fragment.updateFlightStatus(flight.getStatus());
+            }
+        };
+        apiConnection.execute();
+
     }
 
     public void deleteSavedFlight(final int adapterPosition) {
@@ -383,7 +409,6 @@ public class MainActivity extends AppCompatActivity
                 return readStream(in);
             } catch (Exception exception) {
                 exception.printStackTrace();
-                //return getResources().getString(R.string.error);
 
                 return null;
             } finally {
@@ -404,25 +429,17 @@ public class MainActivity extends AppCompatActivity
             }.getType();
 
             FlightsResponse response= gson.fromJson(result,listType);
-            System.out.println("Buscando vuelos en el dia:"+date +"a: "+to);
-            System.out.println("Respuesta getFlights"+result);
             if(!response.getFlights().isEmpty()) {
                 FlightsResponse.FlightsBean flight = response.getFlights().get(0);
 
                 if (flight.getPrice().getTotal().getTotal() == deal.getPrice()) {
-                    System.out.println("ENCONTRADOOO Hasta: "+flight.getOutbound_routes().get(0).getSegments().get(0).getArrival().getAirport().getCity().getName()+"Duracion: " + flight.getOutbound_routes().get(0).getDuration());
-                    System.out.println("------end-----");
                     flights.add(new Flight(flight,deal));
                     adapter.notifyItemInserted(flights.size()-1);
                 }
                 else{
-                    System.out.println("No se encontro el vuelo iniciando con it:"+(it+1));
-                    System.out.println("------end-----");
                     new HttpGetFlights(deal,it+1).execute();
                 }
             }else{
-                System.out.println("No habia vuelos iniciando con it:"+(it+1));
-                System.out.println("------end-------");
                 new HttpGetFlights(deal,it+1).execute();
             }
 
@@ -458,7 +475,6 @@ public class MainActivity extends AppCompatActivity
                 return readStream(in);
             } catch (Exception exception) {
                 exception.printStackTrace();
-                //return getResources().getString(R.string.error);
                 return null;
             } finally {
                 if (urlConnection != null)
@@ -505,8 +521,6 @@ public class MainActivity extends AppCompatActivity
 
         String ans= gson.toJson(savedFlights,listType);
 
-
-        //SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences sharedPref = MyApplication.getSharedPreferences();
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.FAVORITE_FLIGHTS), ans);
@@ -518,7 +532,6 @@ public class MainActivity extends AppCompatActivity
         Type listType = new TypeToken<ArrayList<Flight>>() {
         }.getType();
 
-        //SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences sharedPref = MyApplication.getSharedPreferences();
         String str =sharedPref.getString(getString(R.string.FAVORITE_FLIGHTS),null);
 
@@ -539,12 +552,12 @@ public class MainActivity extends AppCompatActivity
 
                     StatusResponse response= gson.fromJson(result,listType);
 
-                    if(!flight.getStatus().equals(response.getStatus().getStatus())) {
-                        flight.setStatus(response.getStatus().getStatus());
+                    if(!flight.getStatus().equals(getFlightStatusString(response.getStatus().getStatus()))) {
+                        flight.setStatus(getFlightStatusString(response.getStatus().getStatus()));
                         favAdapter.notifyDataSetChanged();
 
                         //pongo un toast
-                        Toast.makeText( getApplicationContext(), getToastStatusString(flight.getNumber(), flight.getStatus()) ,Toast.LENGTH_SHORT  ).show();
+                        Toast.makeText( getApplicationContext(), getToastStatusString(flight.getNumber(), response.getStatus().getStatus()) ,Toast.LENGTH_SHORT  ).show();
 
                     }
                 }
@@ -568,5 +581,20 @@ public class MainActivity extends AppCompatActivity
             resp += getString(R.string.notificationToastCancelled);
         }
         return resp;
+    }
+
+    private String getFlightStatusString(String status) {
+        if(status.equals("S")) {
+            return getString(R.string.flightStatusProgrammed);
+        } else if(status.equals("A")) {
+            return getString(R.string.flightStatusActive);
+        } else if(status.equals("R")) {
+            return getString(R.string.flightStatusDeviated);
+        } else if(status.equals("L")) {
+            return getString(R.string.flightStatusLanded);
+        } else if(status.equals("C")) {
+            return getString(R.string.flightStatusCancelled);
+        }
+        return "Not Found";
     }
 }

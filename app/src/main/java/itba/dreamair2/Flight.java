@@ -66,8 +66,8 @@ public class Flight implements Parcelable {
         this.arrivalTime = getTime(info.getArrival().getDate());
         this.arrivalDate = getStringDate(info.getArrival().getDate());
         this.duration = info.getDuration();
-        this.gate = "Buscando";
-        this.status = "Buscando";
+        this.gate = "";
+        this.status = "";
         this.airline = info.getAirline().getName();
         this.airlineID = info.getAirline().getId();
         this.number = airlineID+" "+info.getNumber()+"";
@@ -426,6 +426,10 @@ public class Flight implements Parcelable {
 
     public String getGate() {
         return gate;
+    }
+
+    public void setGate(String gate) {
+        this.gate = gate;
     }
 
     public String getStatus() {

@@ -28,7 +28,7 @@ public class FlightDetailFragment extends Fragment {
     private TextView arrivalTime;
     private TextView departureTime;
     private TextView departureDate;
-
+    private TextView status;
 
 
     public FlightDetailFragment() {
@@ -68,6 +68,8 @@ public class FlightDetailFragment extends Fragment {
         arrivalTime= (TextView) view.findViewById( R.id.detail_arrival_time);
         departureTime= (TextView) view.findViewById( R.id.detail_departure_time);
         departureDate= (TextView) view.findViewById( R.id.detail_departure_date);
+        status = (TextView) view.findViewById(R.id.detail_flight_state);
+
         setFlight(flight);
 
         gate.setOnClickListener(
@@ -94,7 +96,31 @@ public class FlightDetailFragment extends Fragment {
         arrivalTime.setText(flight.getArrivalTime());
         departureTime.setText(flight.getDepartureTime());
         departureDate.setText(flight.getDepartureDate());
+        status.setText(flight.getStatus());
+        colorStatus();
+    }
+
+    public void updateFlightStatus(String str) {
+        status.setText(str);
+        colorStatus();
+    }
+
+    public void updateFlightGate(String str) {
+        gate.setText(str);
     }
 
 
+    private void colorStatus() {
+        if(status.getText().equals(getActivity().getString(R.string.flightStatusCancelled))) {
+            status.setTextColor(getResources().getColor(R.color.flightCancelled,null));
+        } else if(status.getText().equals(getActivity().getString(R.string.flightStatusLanded))) {
+            status.setTextColor(getResources().getColor(R.color.flightLanded,null));
+        } else if(status.getText().equals(getActivity().getString(R.string.flightStatusProgrammed))) {
+            status.setTextColor(getResources().getColor(R.color.flightProgrammed,null));
+        } else if(status.getText().equals(getActivity().getString(R.string.flightStatusDeviated))) {
+            status.setTextColor(getResources().getColor(R.color.flightDeviated,null));
+        } else if(status.getText().equals(getActivity().getString(R.string.flightStatusActive))) {
+            status.setTextColor(getResources().getColor(R.color.flightActive,null));
+        }
+    }
 }

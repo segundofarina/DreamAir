@@ -7,4 +7,10 @@
     <color name="onTime">#178A56</color>
     <color name="delayed">#A81717</color>
     <color name="white">#FFFFFF</color>
+
+    <color name="flightActive">#178A56</color>
+    <color name="flightProgrammed">#178A56</color>
+    <color name="flightDeviated">#A81717</color>
+    <color name="flightLanded">#178A56</color>
+    <color name="flightCancelled">#A81717</color>
 </resources>

@@ -1,6 +1,7 @@
 package itba.dreamair2.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
@@ -64,6 +65,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         public TextView to;
         public TextView status;
         public TextView flight_number;
+        private View view;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -73,6 +75,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             status = (TextView) itemView.findViewById(R.id.favorite_status);
             flight_number = (TextView) itemView.findViewById(R.id.favorite_flight_number);
 
+            view = itemView;
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -101,10 +104,28 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         viewHolder.status.setText(flight.getStatus());
         viewHolder.flight_number.setText(flight.getNumber());
         viewHolder.image.setImageResource(flight.getAirlineImg());
+
+        colorStatus(viewHolder);
+
     }
 
     @Override
     public int getItemCount() {
         return flights.size();
+    }
+
+    private void colorStatus(FavoritesAdapter.ViewHolder viewHolder) {
+
+        if(viewHolder.status.getText().equals(viewHolder.view.getResources().getString(R.string.flightStatusCancelled))) {
+            viewHolder.status.setTextColor(viewHolder.view.getResources().getColor(R.color.flightCancelled,null));
+        } else if(viewHolder.status.equals(viewHolder.view.getResources().getString(R.string.flightStatusLanded))) {
+            viewHolder.status.setTextColor(viewHolder.view.getResources().getColor(R.color.flightLanded,null));
+        } else if(viewHolder.status.equals(viewHolder.view.getResources().getString(R.string.flightStatusProgrammed))) {
+            viewHolder.status.setTextColor(viewHolder.view.getResources().getColor(R.color.flightProgrammed,null));
+        } else if(viewHolder.status.equals(viewHolder.view.getResources().getString(R.string.flightStatusDeviated))) {
+            viewHolder.status.setTextColor(viewHolder.view.getResources().getColor(R.color.flightDeviated,null));
+        } else if(viewHolder.status.equals(viewHolder.view.getResources().getString(R.string.flightStatusActive))) {
+            viewHolder.status.setTextColor(viewHolder.view.getResources().getColor(R.color.flightActive,null));
+        }
     }
 }
