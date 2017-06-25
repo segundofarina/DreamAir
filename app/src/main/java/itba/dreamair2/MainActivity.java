@@ -45,7 +45,7 @@ import itba.dreamair2.httprequests.DealResponse;
 import itba.dreamair2.httprequests.FlightsResponse;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,FlightDetailFragment.OnFlightDetailListener{
+        implements NavigationView.OnNavigationItemSelectedListener{
 
     ArrayList<Flight> flights;
     CustomCards adapter;
@@ -97,6 +97,8 @@ public class MainActivity extends AppCompatActivity
         favAdapter= new FavoritesAdapter(this,savedFlights);
         new HttpGetDeals().execute();
 
+        Fragment fragment = FavoritesFragment.newInstance(favAdapter,savedFlights);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).addToBackStack(null).commit();
 
     }
 
@@ -127,10 +129,10 @@ public class MainActivity extends AppCompatActivity
         String ans= gson.toJson(savedFlights,listType);
 
 
-//        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPref.edit();
-//        editor.putString(getString(R.string.FAVORITE_FLIGHTS), ans);
-//        editor.commit();
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.FAVORITE_FLIGHTS), ans);
+        editor.commit();
     }
 
     @Override
@@ -156,7 +158,7 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment;
 
         if (id == R.id.nav_flights) {
-            fragment= getSupportFragmentManager().findFragmentById(R.id.fragment_my_flights);
+            fragment= getSupportFragmentManager().findFragmentById(R.id.fragment_favorites);
             if(fragment== null) {
                 fragment = FavoritesFragment.newInstance(favAdapter,savedFlights);
             }
@@ -184,7 +186,14 @@ public class MainActivity extends AppCompatActivity
 
 
     public void addFavoriteFlight(Flight flight){
-        savedFlights.add(flight);
+        if(savedFlights.contains(flight)){
+            Toast.makeText(this,getString(R.string.DElETED_FLIGHT),Toast.LENGTH_SHORT).show();
+            savedFlights.remove(flight);
+
+        }else{
+            Toast.makeText(this,getString(R.string.ADDED_FLIGHT),Toast.LENGTH_SHORT).show();
+            savedFlights.add(flight);
+        }
     }
 
 
@@ -195,13 +204,19 @@ public class MainActivity extends AppCompatActivity
         //fragment.setFlight(flight);
     }
 
-    @Override
-    public void onFlightDetailInteraction(Uri uri) {
+    public void deleteSavedFlight(final int adapterPosition) {
+        final Flight flight =savedFlights.remove(adapterPosition);
+        favAdapter.notifyItemRemoved(adapterPosition);
+        Snackbar.make(findViewById(R.id.fragment_favorites), getString(R.string.DElETED_FLIGHT), Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.DELETED_ACTION), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                savedFlights.add(adapterPosition,flight);
+                                favAdapter.notifyItemInserted(adapterPosition);
+                            }
+                        }).show();
 
     }
-
-
-
 
 
     private class HttpGetFlights extends AsyncTask<DealResponse.DealsBean, Void, String> {
@@ -266,7 +281,7 @@ public class MainActivity extends AppCompatActivity
                     System.out.println("ENCONTRADOOO Hasta: "+flight.getOutbound_routes().get(0).getSegments().get(0).getArrival().getAirport().getCity().getName()+"Duracion: " + flight.getOutbound_routes().get(0).getDuration());
                     System.out.println("------end-----");
                     flights.add(new Flight(flight));
-                    adapter.notifyDataSetChanged();
+                    adapter.notifyItemInserted(flights.size()-1);
                 }
                 else{
                     System.out.println("No se encontro el vuelo iniciando con it:"+(it+1));
@@ -305,7 +320,6 @@ public class MainActivity extends AppCompatActivity
             HttpURLConnection urlConnection = null;
 
             try {
-                //URL url = new URL("http://hci.it.itba.edu.ar/v1/api/geo.groovy?method=getcountries");
                 URL url = new URL("http://hci.it.itba.edu.ar/v1/api/booking.groovy?method=getflightdeals&from=BUE");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());

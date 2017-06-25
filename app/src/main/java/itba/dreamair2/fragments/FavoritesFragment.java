@@ -5,17 +5,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import java.util.ArrayList;
-import java.util.List;
-
 import itba.dreamair2.Flight;
+import itba.dreamair2.MainActivity;
 import itba.dreamair2.R;
 import itba.dreamair2.adapters.FavoritesAdapter;
-import itba.dreamair2.httprequests.FlightsResponse;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,9 +64,28 @@ public class FavoritesFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
+
+        ItemTouchHelper ith = new ItemTouchHelper(createHelperCallback());
+        ith.attachToRecyclerView(recyclerView);
         return view;
     }
 
+    private ItemTouchHelper.Callback createHelperCallback() {
+        ItemTouchHelper.SimpleCallback stc= new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT){
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                MainActivity act= (MainActivity) getActivity();
+                act.deleteSavedFlight(viewHolder.getAdapterPosition());
+            }
+        };
+        return stc;
+    };
 
 
 }

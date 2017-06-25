@@ -3,7 +3,6 @@ package itba.dreamair2;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -412,6 +411,65 @@ public class Flight implements Parcelable {
         dest.writeString(price);
         dest.writeInt(airlineImg);
         dest.writeInt(destinationImg);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Flight flight = (Flight) o;
+
+        if (airlineImg != flight.airlineImg) return false;
+        if (destinationImg != flight.destinationImg) return false;
+        if (!departureCity.equals(flight.departureCity)) return false;
+        if (!departureAirport.equals(flight.departureAirport)) return false;
+        if (!departureCityId.equals(flight.departureCityId)) return false;
+        if (!departureAirportId.equals(flight.departureAirportId)) return false;
+        if (!departureTime.equals(flight.departureTime)) return false;
+        if (!departureDate.equals(flight.departureDate)) return false;
+        if (!arrivalCity.equals(flight.arrivalCity)) return false;
+        if (!arrivalAirport.equals(flight.arrivalAirport)) return false;
+        if (!arrivalCityId.equals(flight.arrivalCityId)) return false;
+        if (!arrivalAirportId.equals(flight.arrivalAirportId)) return false;
+        if (arrivalTime != null ? !arrivalTime.equals(flight.arrivalTime) : flight.arrivalTime != null)
+            return false;
+        if (arrivalDate != null ? !arrivalDate.equals(flight.arrivalDate) : flight.arrivalDate != null)
+            return false;
+        if (!duration.equals(flight.duration)) return false;
+        if (gate != null ? !gate.equals(flight.gate) : flight.gate != null) return false;
+        if (status != null ? !status.equals(flight.status) : flight.status != null) return false;
+        if (!number.equals(flight.number)) return false;
+        if (!airline.equals(flight.airline)) return false;
+        if (!airlineID.equals(flight.airlineID)) return false;
+        return price.equals(flight.price);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = departureCity.hashCode();
+        result = 31 * result + departureAirport.hashCode();
+        result = 31 * result + departureCityId.hashCode();
+        result = 31 * result + departureAirportId.hashCode();
+        result = 31 * result + departureTime.hashCode();
+        result = 31 * result + departureDate.hashCode();
+        result = 31 * result + arrivalCity.hashCode();
+        result = 31 * result + arrivalAirport.hashCode();
+        result = 31 * result + arrivalCityId.hashCode();
+        result = 31 * result + arrivalAirportId.hashCode();
+        result = 31 * result + (arrivalTime != null ? arrivalTime.hashCode() : 0);
+        result = 31 * result + (arrivalDate != null ? arrivalDate.hashCode() : 0);
+        result = 31 * result + duration.hashCode();
+        result = 31 * result + (gate != null ? gate.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + number.hashCode();
+        result = 31 * result + airline.hashCode();
+        result = 31 * result + airlineID.hashCode();
+        result = 31 * result + price.hashCode();
+        result = 31 * result + airlineImg;
+        result = 31 * result + destinationImg;
+        return result;
     }
 
     @Override
