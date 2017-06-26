@@ -58,6 +58,7 @@ import itba.dreamair2.fragments.FavoritesFragment;
 import itba.dreamair2.fragments.FlightDetailFragment;
 import itba.dreamair2.fragments.MapFragment;
 import itba.dreamair2.fragments.OffersFragment;
+import itba.dreamair2.fragments.SettingsFragment;
 import itba.dreamair2.httprequests.DealResponse;
 import itba.dreamair2.httprequests.FlightsResponse;
 import itba.dreamair2.httprequests.StatusResponse;
@@ -217,7 +218,7 @@ public class MainActivity extends AppCompatActivity
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).commit();
         }  else if (id == R.id.nav_settings) {
-
+            getFragmentManager().beginTransaction().replace(R.id.container, new SettingsFragment()).addToBackStack(null).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -239,6 +240,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void loadSettingsFragment() {
+
+    }
 
 
     public void loadFlightDetailFragment(final Flight flight){
@@ -251,6 +255,11 @@ public class MainActivity extends AppCompatActivity
         ApiConnection apiConnection = new ApiConnection(url) {
             @Override
             protected void onPostExecute(String result) {
+                if(result == null) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.CONNECTION_FAILED),Toast.LENGTH_LONG);
+                    return;
+                }
+
                 Gson gson = new Gson();
                 Type listType = new TypeToken<StatusResponse>() {
                 }.getType();
@@ -429,6 +438,12 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(String result) {
+
+            if(result == null) {
+                Toast.makeText(getApplicationContext(), getString(R.string.CONNECTION_FAILED),Toast.LENGTH_LONG);
+                return;
+            }
+
             if(it>12){
                 return;
             }
@@ -492,18 +507,22 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(String result) {
+            if(result == null) {
+                Toast.makeText(getApplicationContext(), getString(R.string.CONNECTION_FAILED),Toast.LENGTH_LONG);
+                return;
+            }
+
             Gson gson = new Gson();
             Type listType = new TypeToken<DealResponse>() {
             }.getType();
 
             DealResponse response= gson.fromJson(result,listType);
-            System.out.println("resultado: "+result);
+            if(response.getDeals() == null) {
+                Toast.makeText(getApplicationContext(), getString(R.string.CONNECTION_FAILED),Toast.LENGTH_LONG);
+            }
             for(DealResponse.DealsBean deal :response.getDeals()){
                 new HttpGetFlights(deal,2).execute(deal);
-                System.out.println(deal.getCity().getName());
             }
-
-
 
         }
 
@@ -554,20 +573,27 @@ public class MainActivity extends AppCompatActivity
             ApiConnection apiConnection = new ApiConnection(url) {
                 @Override
                 protected void onPostExecute(String result) {
+                    if(result == null) {
+                        return;
+                    }
                     Gson gson = new Gson();
                         Type listType = new TypeToken<StatusResponse>() {
                     }.getType();
 
                     StatusResponse response= gson.fromJson(result,listType);
 
-                    if(!flight.getStatus().equals(getFlightStatusString(response.getStatus().getStatus()))) {
-                        flight.setStatus(getFlightStatusString(response.getStatus().getStatus()));
-                        favAdapter.notifyDataSetChanged();
+                    if(response.getStatus() != null) {
 
-                        //pongo un toast
-                        Toast.makeText( getApplicationContext(), getToastStatusString(flight.getNumber(), response.getStatus().getStatus()) ,Toast.LENGTH_SHORT  ).show();
+                        if(!flight.getStatus().equals(getFlightStatusString(response.getStatus().getStatus()))) {
+                            flight.setStatus(getFlightStatusString(response.getStatus().getStatus()));
+                            favAdapter.notifyDataSetChanged();
 
+                            //pongo un toast
+                            Toast.makeText( getApplicationContext(), getToastStatusString(flight.getNumber(), response.getStatus().getStatus()) ,Toast.LENGTH_SHORT  ).show();
+
+                        }
                     }
+
                 }
             };
             apiConnection.execute();

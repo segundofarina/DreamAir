@@ -45,13 +45,22 @@
             android:value="@string/google_maps_key" />
 
         <receiver android:name=".notifications.AlarmReceiver" />
-
         <receiver android:name=".notifications.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
         <service android:name=".services.SchedulingService" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="itba.dreamair2.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
