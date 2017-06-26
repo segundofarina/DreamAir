@@ -3,6 +3,7 @@ package itba.dreamair2.fragments;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ public class FlightDetailFragment extends Fragment {
             flight = (Flight) getArguments().getParcelable(ARG_PARAM1);
         }
 
+
     }
 
     @Override
@@ -72,7 +74,7 @@ public class FlightDetailFragment extends Fragment {
 
         setFlight(flight);
 
-        gate.setOnClickListener(
+        view.findViewById(R.id.detail_favorite).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -82,6 +84,7 @@ public class FlightDetailFragment extends Fragment {
                     }
                 }
         );
+
         return view;
     }
 
@@ -98,6 +101,8 @@ public class FlightDetailFragment extends Fragment {
         departureDate.setText(flight.getDepartureDate());
         status.setText(flight.getStatus());
         colorStatus();
+        MainActivity activity= (MainActivity)getActivity();
+        activity.getSupportActionBar().setTitle(flight.getNumber());
     }
 
     public void updateFlightStatus(String str) {

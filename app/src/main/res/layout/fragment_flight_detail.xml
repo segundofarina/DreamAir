@@ -7,12 +7,16 @@
     android:layout_height="match_parent"
     android:id="@+id/fragment_flight_detail"
     tools:context="itba.dreamair2.fragments.FlightDetailFragment">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_gravity="center">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,7 +24,9 @@
             android:background="@color/white"
             android:paddingTop="20dp"
             android:paddingBottom="10dp"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+
+            >
 
             <LinearLayout
                 android:orientation="vertical"
@@ -241,6 +247,17 @@
             </LinearLayout>
         </LinearLayout>
 
+    </LinearLayout>
+        <ImageButton
+            android:id="@+id/detail_favorite"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/ic_favorite_border_black_24dp"
+            android:background="@color/white"
+            android:tint="@color/colorAccent"
+            />
     </LinearLayout>
 
 

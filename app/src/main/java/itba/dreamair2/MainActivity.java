@@ -78,7 +78,9 @@ public class MainActivity extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
 
     private BroadcastReceiver broadcastReceiver;
+    private SearchView searchView;
     private AlarmReceiver alarm;
+    ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
@@ -146,6 +148,8 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+        //toggle.setDrawerIndicatorEnabled(true);
+        setDrawerState(true);
     }
 
     @Override
@@ -153,7 +157,8 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
+        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
+
         searchView.setOnQueryTextListener(this);
         return true;
     }
@@ -227,8 +232,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
     public void addFavoriteFlight(Flight flight){
         if(savedFlights.contains(flight)){
             Toast.makeText(this,getString(R.string.DElETED_FLIGHT),Toast.LENGTH_SHORT).show();
@@ -244,11 +247,31 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void setDrawerState(boolean isEnabled) {
+        if ( isEnabled ) {
+            //mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            toggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
+            toggle.setDrawerIndicatorEnabled(true);
+            toggle.syncState();
+            getSupportActionBar().setHomeButtonEnabled(true);
+
+
+        }
+        else {
+            //mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            toggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            toggle.setDrawerIndicatorEnabled(false);
+            toggle.syncState();
+            getSupportActionBar().setHomeButtonEnabled(false);
+
+        }
+    }
 
     public void loadFlightDetailFragment(final Flight flight){
+        toggle.setDrawerIndicatorEnabled(false);
         final FlightDetailFragment fragment = FlightDetailFragment.newInstance(flight);
         getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).addToBackStack(null).commit();
-
+        //setDrawerState(false);
         //Busco el estado del vuelo
         String url = FLIGHT_STATUS_BASEURL + "&airline_id=" + flight.getAirlineID() + "&flight_number=" + flight.getNumber().substring(3) ;
 
@@ -273,9 +296,12 @@ public class MainActivity extends AppCompatActivity
                     flight.setGate(getString(R.string.gateNotFound));
                 }
 
-
-                fragment.updateFlightGate(flight.getGate());
-                fragment.updateFlightStatus(flight.getStatus());
+                try {
+                    fragment.updateFlightGate(flight.getGate());
+                    fragment.updateFlightStatus(flight.getStatus());
+                }catch (Exception e){
+                    Log.v("error","Rompemo todo");
+                }
             }
         };
         apiConnection.execute();
@@ -364,6 +390,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onQueryTextSubmit(String query) {
         String params[]=query.split(" ");
+        if(params.length<2){
+            Toast.makeText(getApplicationContext(),"No existe el vuelo",Toast.LENGTH_SHORT).show();
+            searchView.setIconified(true);
+            return true;
+        }
         String url = FLIGHT_STATUS_BASEURL + "&airline_id=" + params[0] + "&flight_number=" + params[1] ;
 
         new ApiConnection(url){
@@ -385,7 +416,8 @@ public class MainActivity extends AppCompatActivity
 
             }
         }.execute();
-        return false;
+        searchView.setIconified(true);
+        return true;
     }
 
     @Override
